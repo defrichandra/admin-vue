@@ -41,11 +41,11 @@ class AuthController extends Controller
             $token = $user->createToken('token')->plainTextToken;
             $cookie = cookie(name: 'jwt', value: $token, minutes: 60 * 24); //1 day
 
-            return response()->json(['message' => 'success', 'token' => $token])->withCookie($cookie);
+            return response()->json(['message' => 'success', 'token' => $token, 'user' => $user])->withCookie($cookie);
         } else {
             // invalid credentials, act accordingly
             return response()->json(['message' => 'Invalid credentials!'], 401);
-        }   
+        }
         // return response()->json(['message' => 'success'])->withCookie($cookie);
     }
 

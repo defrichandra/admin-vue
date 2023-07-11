@@ -73,7 +73,7 @@ use this 2 command:
 
 - ## How to Login
 
-use this 2 command:
+fill the form with this:
 - email: admin@gmail.com
 - password: admin123
 

@@ -70,7 +70,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 use this 2 command:
 - npm run dev
 - php artisan serve
-- 
+
 and then go to: http://127.0.0.1:8000/
 
 - ## How to Login

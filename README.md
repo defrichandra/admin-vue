@@ -71,6 +71,12 @@ use this 2 command:
 - npm run dev
 - php artisan serve
 
+- ## How to Login
+
+use this 2 command:
+- email: admin@gmail.com
+- password: admin123
+
 ## Example
 ![example](https://github.com/defrichandra/admin-vue/assets/73463265/64acb165-9b7c-45e6-9936-872b4736ef1b)
 

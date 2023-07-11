@@ -62,7 +62,7 @@ class PostsController extends Controller
         $posts = Posts::find($id);
         $posts->update($request->all());
         return response()->json([
-            'message' => 'Post Updated Successfully!!',
+            'message' => 'success',
             'data' => $posts
         ]);
     }
@@ -73,7 +73,7 @@ class PostsController extends Controller
         $posts = Posts::find($id);
         $posts->delete();
         return response()->json([
-            'message' => 'Post Deleted Successfully!!',
+            'message' => 'success',
             'data' => $posts
         ]);
     }

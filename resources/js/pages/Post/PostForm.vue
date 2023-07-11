@@ -7,7 +7,6 @@
           style="align-self: end"
           @click="$emit('closeModal')"
         ></v-icon>
-
         <p class="cookieDescription" style="align-self: baseline">Thumbnail</p>
         <input
           id="selectedFile"
@@ -27,7 +26,6 @@
           @click="$emit('triggerFileInput')"
           :model-value="mode === 'Add' ? thumbnail : dataEdit.thumbnail"
         ></v-text-field>
-
         <p class="cookieDescription mt-3" style="align-self: baseline">Title</p>
         <v-text-field
           density="compact"
@@ -39,7 +37,6 @@
           :model-value="mode === 'Add' ? title : dataEdit.title"
           @update:model-value="$emit('handleTitle', $event)"
         ></v-text-field>
-
         <p class="cookieDescription mt-3" style="align-self: baseline">
           Content
         </p>
@@ -56,7 +53,6 @@
           :model-value="mode === 'Add' ? content : dataEdit.content"
           @update:model-value="$emit('handleContent', $event)"
         ></v-textarea>
-
         <p class="cookieDescription mt-3" style="align-self: baseline">
           Publish Status
         </p>
@@ -75,11 +71,9 @@
           "
           @update:model-value="$emit('handleStatus', $event)"
         ></v-select>
-
         <p class="cookieDescription mt-3" style="align-self: baseline">
           Publish Date
         </p>
-
         <Datepicker
           placeholder="dd/mm/yyyy"
           format="dd/MM/yyyy"
@@ -87,18 +81,10 @@
           :model-value="mode === 'Add' ? publishDate : dataEdit.publish_date"
           @update:model-value="$emit('handleDate', $event)"
         />
-
-        <!-- Add -->
-
         <div class="buttonContainer">
           <button class="submitButton" @click="$emit('handleSubmit')">
             Save
           </button>
-
-          <!-- <button class="acceptButton" @click="handleUpdate(id)">Edit</button>
-          <button class="declineButton" @click="handleDelete(id)">
-            Delete
-          </button> -->
         </div>
       </div>
     </v-dialog>

@@ -1,6 +1,7 @@
 import Login from "../pages/Login/Login.vue";
 import Post from "../pages/Post/Post.vue";
 import Layout from "../layouts/default/Default.vue";
+import User from "../pages/User/User.vue";
 
 export default [
     {
@@ -20,6 +21,9 @@ export default [
         },
         // redirect: "/login",
         component: Layout,
-        children: [{ path: "/posts", name: "Posts", component: Post }],
+        children: [
+            { path: "/posts", name: "Posts", component: Post },
+            { path: "/user", name: "User", component: User },
+        ],
     },
 ];

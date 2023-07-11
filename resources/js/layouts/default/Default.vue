@@ -1,10 +1,15 @@
 <template>
   <v-app>
-    <div class="content mt-8">
+    <div class="content">
       <default-bar />
-      <side-bar :visible="store.drawer" :items-side-bar="itemsSideBar"></side-bar>
+      <side-bar
+        :visible="store.drawer"
+        :items-side-bar="itemsSideBar"
+        :to="itemsSideBar.to"
+        link
+      ></side-bar>
       <default-view />
-    </div>
+    </div>  
   </v-app>
 </template>
 
@@ -19,24 +24,18 @@ const store = useLoginStore();
 
 const itemsSideBar = ref([
   {
-    title: "Foo",
-    value: "foo",
+    title: "Posts",
+    value: "posts",
+    icon: "mdi-post",
+    to: "/posts",
   },
   {
-    title: "Bar",
-    value: "bar",
-  },
-  {
-    title: "Fizz",
-    value: "fizz",
-  },
-  {
-    title: "Buzz",
-    value: "buzz",
+    title: "User",
+    value: "user",
+    icon: "mdi-account-outline",
+    to: "/user",
   },
 ]);
-
-
 </script>
 
 <style lang="scss">

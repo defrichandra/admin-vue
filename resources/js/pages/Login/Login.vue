@@ -58,10 +58,6 @@ import { ref, onMounted } from "vue";
 import { useLoginStore } from "../../store/Login/login";
 import { useRouter } from "vue-router";
 
-// onMounted(() => { 
-//   store.initialize();
-// });
-
 const email = ref("");
 const password = ref("");
 
@@ -77,7 +73,8 @@ function handleLogin() {
     .then((res) => {
       if (res.data.message === "success") {
         router.push({ name: "Posts" });
-        localStorage.setItem("isLoggedIn", "true"); // Persist the isLoggedIn state in browser storage
+        localStorage.setItem("isLoggedIn", true); // Persist the isLoggedIn state in browser storage
+        localStorage.setItem("token", res.data.tokenDetails.token);
       }
     });
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Posts;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class PostsController extends Controller
@@ -11,70 +12,100 @@ class PostsController extends Controller
     //
     public function uploadFile(Request $request)
     {
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
+        if ($request->hasHeader('Authorization')) {
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
 
-            $fileName = $file->getClientOriginalName();
-            $filePath = $file->store('upload');
+                $fileName = $file->getClientOriginalName();
+                $filePath = $file->store('upload');
 
-            return response()->json(['message' => 'File uploaded successfully', 'fileName' => $fileName, 'filePath' => $filePath]);
+                return response()->json(['message' => 'File uploaded successfully', 'fileName' => $fileName, 'filePath' => $filePath]);
+            } else {
+                return response()->json(['message' => 'No file uploaded'], 400);
+            }
         } else {
-            return response()->json(['message' => 'No file uploaded'], 400);
+            return response()->json(['message' => 'Authorization not existed'], 500);
         }
     }
 
-    public function getFilePath($filename)
+    public function getFilePath($filename, Request $request)
     {
-        $path = 'upload/' . $filename;
-        $filePath = Storage::path($path);
+        if ($request->hasHeader('Authorization')) {
+            $path = 'upload/' . $filename;
+            $filePath = Storage::path($path);
 
-        if (file_exists($filePath)) {
-            return response()->file($filePath);
+            if (file_exists($filePath)) {
+                return response()->file($filePath);
+            } else {
+                abort(404);
+            }
         } else {
-            abort(404);
+            return response()->json(['message' => 'Authorization not existed'], 500);
         }
     }
 
     public function save_post(Request $request)
     {
-
-        $post = Posts::create([
-            'file' => $request->input(key: 'file'),
-            'thumbnail' => $request->input(key: 'thumbnail'),
-            'title' => $request->input(key: 'title'),
-            'content' => $request->input(key: 'content'),
-            'publish_status' => $request->input(key: 'publishStatus'),
-            'publish_date' => $request->input(key: 'publishDate'),
-        ]);
-        return response()->json([
-            'message' => 'success',
-            'data' => $post
-        ]);
+        if ($request->hasHeader('Authorization')) {
+            $post = Posts::create([
+                'file' => $request->input(key: 'file'),
+                'thumbnail' => $request->input(key: 'thumbnail'),
+                'title' => $request->input(key: 'title'),
+                'content' => $request->input(key: 'content'),
+                'publish_status' => $request->input(key: 'publishStatus'),
+                'publish_date' => $request->input(key: 'publishDate'),
+            ]);
+            return response()->json([
+                'message' => 'success',
+                'data' => $post
+            ]);
+        } else {
+            return response()->json(['message' => 'Authorization not existed'], 500);
+        }
     }
 
     public function view_post(Request $request)
     {
-        return Posts::all();
+        if ($request->hasHeader('Authorization')) {
+            $post = Posts::all();
+
+            return response()->json([
+                'message' => 'success',
+                'data' => $post
+            ]);
+        } else {
+            return response()->json(['message' => 'Authorization not existed'], 500);
+        }
     }
 
     public function update_post($id, Request $request)
     {
-        $posts = Posts::find($id);
-        $posts->update($request->all());
-        return response()->json([
-            'message' => 'success',
-            'data' => $posts
-        ]);
+        if ($request->hasHeader('Authorization')) {
+            $posts = Posts::find($id);
+            $posts->update($request->all());
+            return response()->json([
+                'message' => 'success',
+                'data' => $posts
+            ]);
+        } else {
+            return response()->json(['message' => 'Authorization not existed'], 500);
+        }
     }
 
 
-    public function delete_post($id)
+    public function delete_post($id, Request $request)
     {
-        $posts = Posts::find($id);
-        $posts->delete();
-        return response()->json([
-            'message' => 'success',
-            'data' => $posts
-        ]);
+        if ($request->hasHeader('Authorization')) {
+            $posts = Posts::find($id);
+
+            $posts->delete();
+
+            return response()->json([
+                'message' => 'success',
+                'data' => $posts
+            ]);
+        } else {
+            return response()->json(['message' => 'Authorization not existed'], 500);
+        }
     }
 }

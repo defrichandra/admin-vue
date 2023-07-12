@@ -47,7 +47,8 @@ function handleLogOut() {
   store.logout().then((res) => {
     if (res.data.message === "success") {
       router.push({ name: "Login" });
-      localStorage.setItem("isLoggedIn", "false"); // Persist the isLoggedIn state in browser storage
+      localStorage.setItem("isLoggedIn", false); // Persist the isLoggedIn state in browser storage
+      localStorage.setItem("token", "");
     }
   });
 }

@@ -35,9 +35,16 @@ return [
     |
     */
 
+    // 'guards' => [
+    //     'web' => [
+    //         'driver' => 'session',
+    //         'provider' => 'users',
+    //     ],
+    // ],
+
     'guards' => [
         'web' => [
-            'driver' => 'session',
+            'driver' => 'jwt',
             'provider' => 'users',
         ],
     ],
@@ -111,5 +118,22 @@ return [
     */
 
     'password_timeout' => 10800,
+
+    'jwt' => [
+        'secret' => env('JWT_SECRET'),
+        'keys' => [
+            'public' => env('JWT_PUBLIC_KEY'),
+            'private' => env('JWT_PRIVATE_KEY'),
+        ],
+        'ttl' => env('JWT_TTL', 60), // Token expiration time in minutes
+        'refresh_ttl' => env('JWT_REFRESH_TTL', 20160), // Refresh token expiration time in minutes
+        'algo' => env('JWT_ALGO', 'HS256'), // Algorithm used to sign the tokens
+        'blacklist_enabled' => env('JWT_BLACKLIST_ENABLED', true), // Enable token blacklist (invalidating revoked tokens)
+        'providers' => [
+            'jwt' => Tymon\JWTAuth\Providers\JWT\Namshi::class,
+            'auth' => Tymon\JWTAuth\Providers\Auth\Illuminate::class,
+            'storage' => Tymon\JWTAuth\Providers\Storage\Illuminate::class,
+        ],
+    ],
 
 ];

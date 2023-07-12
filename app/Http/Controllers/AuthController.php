@@ -7,17 +7,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\JWT;
 
 class AuthController extends Controller
 {
-    // public function __construct() {
-    //     $this->middleware('auth:api', ['except' => 'login', 'logout']);
-    // }
-
-    public function index()
+    private $jwt;
+    public function __construct(JWT $jwt)
     {
-        return view('restricted-screen');
+        $this->jwt = $jwt;
     }
 
     public function register(Request $request)
@@ -31,37 +29,55 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
-        // if (!Auth::attempt($credentials)) {
-        //     return response()->json(['message' => 'Invalid credentials!'], 401);
-        // }
 
-        if (Auth::guard('web')->attempt($credentials)) {
-            // requests good
-            $user = Auth::guard('web')->user();
-            $token = $user->createToken('token')->plainTextToken;
-            $cookie = cookie(name: 'jwt', value: $token, minutes: 60 * 24); //1 day
-
-            return response()->json(['message' => 'success', 'token' => $token, 'user' => $user])->withCookie($cookie);
-        } else {
-            // invalid credentials, act accordingly
-            return response()->json(['message' => 'Invalid credentials!'], 401);
+        try {
+            if (!$token = Auth::attempt($credentials)) {
+                return response()->json(['error' => 'Invalid credentials'], 401);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Could not create token'], 500);
         }
-        // return response()->json(['message' => 'success'])->withCookie($cookie);
+
+        $user = auth()->user();
+
+        $tokenDetails = [
+            'token' => $token,
+            'expires_in' => $this->jwt->factory()->getTTL() * 60 * 24,
+            // Expiration time in seconds
+            'issued_at' => $this->jwt->factory()->getPayload($token)->get('iat'),
+        ];
+
+        $cookie = cookie(name: 'jwt', value: $token, minutes: 60 * 24);
+
+        return response()->json([
+            'message' => 'success',
+            'tokenDetails' => $tokenDetails,
+            'user' => $user
+        ])->withCookie($cookie);
     }
 
-    public function user()
+    public function user(Request $request)
     {
-        return Auth::user();
+        if ($request->hasHeader('Authorization')) {
+            $user = Auth::user();
+            return response()->json($user);
+        } else {
+            return response()->json(['message' => 'Authorization not existed'], 500);
+        }
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        $cookie = Cookie::forget('jwt');
+        if ($request->hasHeader('Authorization')) {
+            Auth::logout();
 
-        return response()->json(['message' => 'success'])->withCookie($cookie);
+            // Clear the user session
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return response()->json(['message' => 'success']);
+        } else {
+            return response()->json(['message' => 'Authorization not existed'], 500);
+        }
     }
-
-    // protected function guard() {
-    //     return Auth::guard();
-    // }
 }

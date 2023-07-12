@@ -27,8 +27,8 @@ Route::group([
 ], function ($router) {
     Route::post('register', 'AuthController@register');
     Route::post('login', 'AuthController@login');
-    Route::middleware('auth:sanctum')->get('user', 'AuthController@user');
-    Route::middleware('auth:sanctum')->post('logout', 'AuthController@logout');
+    Route::get('user', 'AuthController@user');
+    Route::post('logout', 'AuthController@logout');
 });
 
 Route::group([

@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Posts extends Model
+class Posts extends Model implements JWTSubject
 {
     use HasFactory;
 
@@ -17,4 +18,15 @@ class Posts extends Model
         'publish_status',
         'publish_date',
     ];
+
+    // Implement the methods required by the JWTSubject interface
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }

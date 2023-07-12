@@ -13,14 +13,15 @@ export const useLoginStore = defineStore("app", {
         initialize() {
             // Retrieve the isLoggedIn state from browser storage on store initialization
             const isLoggedIn = localStorage.getItem("isLoggedIn");
-            return isLoggedIn
+            const token = localStorage.getItem("token");
+
+            return { isLoggedIn, token };
         },
         async login(request) {
             return await new Promise((resolve, reject) => {
                 axios
                     .post(`${url}/api/auth/login`, request)
                     .then((response) => {
-                        console.log(response);
                         resolve(response);
                     })
                     .catch((error) => {
@@ -32,9 +33,19 @@ export const useLoginStore = defineStore("app", {
         async logout() {
             return await new Promise((resolve, reject) => {
                 axios
-                    .post(`${url}/api/auth/logout`)
+                    .post(
+                        `${url}/api/auth/logout`,
+                        {},
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.token}`,
+                            },
+                            validateStatus: function (status) {
+                                return status == 200;
+                            },
+                        }
+                    )
                     .then((response) => {
-                        console.log(response);
                         resolve(response);
                     })
                     .catch((error) => {

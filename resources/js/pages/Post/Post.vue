@@ -42,9 +42,9 @@
               <span>By Defri Chandra</span>
             </div>
             <div class="article-title">
-              <a href=""
-                ><h3>{{ item.title }}</h3></a
-              >
+              <a href="">
+                <h3>{{ item.title }}</h3>
+              </a>
             </div>
             <div class="article-description">
               <p>
@@ -100,7 +100,7 @@ const store = usePostStore();
 //View
 function loadPost() {
   store.viewPost().then((res) => {
-    store.posts = res.data;
+    store.posts = res.data.data;
 
     store.posts.map((item) => {
       store.showImage(item.file).then((response) => {
@@ -134,12 +134,15 @@ function clear() {
 function openModal(mode, item) {
   postForm.value = true;
   modeForm.value = mode;
-  selectedData.value = item;
 
-  selectedData.value.publish_date = moment(
-    selectedData.value.publish_date,
-    "DD/MM/YYYY"
-  ).format("YYYY-MM-DD");
+  if (modeForm.value === "Edit") {
+    selectedData.value = item;
+
+    selectedData.value.publish_date = moment(
+      selectedData.value.publish_date,
+      "DD/MM/YYYY"
+    ).format("YYYY-MM-DD");
+  }
 }
 //Modal Form
 

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\PostsService;
 use Illuminate\Http\Request;
 use App\Models\Posts;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class PostsController extends Controller
@@ -39,6 +39,23 @@ class PostsController extends Controller
             } else {
                 abort(404);
             }
+        } else {
+            return response()->json(['message' => 'Authorization not existed'], 500);
+        }
+    }
+
+    public function search_post(Request $request)
+    {
+        if ($request->hasHeader('Authorization')) {
+            $query = $request->input('searchValue');
+
+            // Perform the search query on the posts table
+            $posts = Posts::where('title', 'LIKE', "%$query%")
+                ->orWhere('content', 'LIKE', "%$query%")
+                ->get();
+
+            // Return the search results as a JSON response
+            return response()->json(['message' => 'success', 'data' => $posts]);
         } else {
             return response()->json(['message' => 'Authorization not existed'], 500);
         }

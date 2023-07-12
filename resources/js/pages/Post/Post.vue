@@ -3,9 +3,33 @@
     <div class="container">
       <div class="section-heading">
         <h2>Latest Articles</h2>
-        <v-btn variant="outlined" class="logOutBtn" @click="openModal('Add')">
-          Add
-        </v-btn>
+      </div>
+      <div class="d-flex flex-row mb-8">
+        <v-col cols="4" class="px-0">
+          <v-text-field
+            density="compact"
+            variant="outlined"
+            placeholder="Search"
+            single-line
+            hide-details
+            class="input"
+            v-model="searchValue"
+          ></v-text-field>
+        </v-col>
+        <v-col class="mt-1 mx-3">
+          <v-btn
+            variant="outlined"
+            class="declineButton text-none"
+            @click="handleSearch(searchValue)"
+          >
+            Search
+          </v-btn>
+        </v-col>
+        <v-col class="mt-1 text-end">
+          <v-btn variant="outlined" class="acceptButton text-none" @click="openModal('Add')">
+            Add
+          </v-btn>
+        </v-col>
       </div>
       <div class="articles-grid">
         <div class="article" v-for="(item, index) in store.posts" :key="index">
@@ -96,6 +120,30 @@ onMounted(() => {
 });
 
 const store = usePostStore();
+
+// Search
+const searchValue = ref("");
+
+function handleSearch() {
+  let request = {
+    searchValue: searchValue.value,
+  };
+
+  store.searchPost(request).then((res) => {
+    console.log(res);
+    if (res.data.message === "success") {
+      store.posts = res.data.data;
+
+      store.posts.map((item) => {
+        store.showImage(item.file).then((response) => {
+          const blob = new Blob([response.data], { type: "image/*" });
+          item.imageSrc = URL.createObjectURL(blob);
+        });
+      });
+    }
+  });
+}
+// Search
 
 //View
 function loadPost() {

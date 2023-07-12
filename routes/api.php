@@ -42,4 +42,5 @@ Route::group([
     Route::get('view_post', 'PostsController@view_post');
     Route::put('update_post/{id}', 'PostsController@update_post');
     Route::delete('delete_post/{id}', 'PostsController@delete_post');
+    Route::post('search_post', 'PostsController@search_post');
 });

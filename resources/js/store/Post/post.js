@@ -49,6 +49,25 @@ export const usePostStore = defineStore("post", {
                     });
             });
         },
+        async searchPost(request) {
+            return await new Promise((resolve, reject) => {
+                axios
+                    .post(`${url}/api/post/search_post`, request, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.token}`,
+                        },
+                        validateStatus: function (status) {
+                            return status == 200;
+                        },
+                    })
+                    .then((response) => {
+                        resolve(response);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            });
+        },
         async savePost(request) {
             return await new Promise((resolve, reject) => {
                 axios

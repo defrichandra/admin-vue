@@ -1,0 +1,56 @@
+.card {
+    background: #fff;
+    border-radius: 0.3125rem;
+    box-shadow: 0 0.1875rem 0.75rem rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease-in-out;
+    overflow: hidden;
+    max-width: 69.375rem;
+    margin: 0 auto;
+}
+
+.card-article {
+    padding: 1.5rem 1.5rem;
+}
+
+.card-article h2 {
+    font-weight: 500;
+    color: rgb(17 24 39 / var(--tw-text-opacity));
+    --tw-text-opacity: 1;
+}
+
+.card-article p {
+    padding-top: 0.5rem;
+    color: rgb(75 85 99 / var(--tw-text-opacity));
+    --tw-text-opacity: 1;
+}
+
+.label-card {
+    margin-top: 1.5rem;
+    --tw-text-opacity: 1;
+    color: rgb(55 65 81 / var(--tw-text-opacity));
+    font-weight: 500;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.saveBtn {
+    background-color: #7b57ff;
+    transition-duration: 0.2s;
+    border: none;
+    color: rgb(241, 241, 241);
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 20px;
+}
+
+.deleteBtn {
+    background-color: red;
+    transition-duration: 0.2s;
+    border: none;
+    color: rgb(241, 241, 241);
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 20px;
+}

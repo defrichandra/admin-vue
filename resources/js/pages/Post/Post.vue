@@ -26,7 +26,11 @@
           </v-btn>
         </v-col>
         <v-col class="mt-1 text-end">
-          <v-btn variant="outlined" class="acceptButton text-none" @click="openModal('Add')">
+          <v-btn
+            variant="outlined"
+            class="acceptButton text-none"
+            @click="openModal('Add')"
+          >
             Add
           </v-btn>
         </v-col>
@@ -63,7 +67,7 @@
               </v-tooltip>
             </div>
             <div class="article-author">
-              <span>By Defri Chandra</span>
+              <span>By {{ item.updated_by ? item.updated_by : item.created_by }} ({{ item.publish_date }})</span>
             </div>
             <div class="article-title">
               <a href="">
@@ -106,6 +110,12 @@
     @handleDate="handleDate"
     @handleSubmit="handleSubmit"
   />
+
+  <Error
+    :showSnackbar="showSnackbar"
+    :snackbarColor="snackbarColor"
+    :snackbarMsg="snackbarMsg"
+  />
 </template>
 
 <script setup>
@@ -114,6 +124,7 @@ import { ref, onMounted } from "vue";
 import PostForm from "./PostForm.vue";
 import moment from "moment";
 import ModalDelete from "../../components/ModalDelete.vue";
+import Error from "../../components/Error.vue";
 
 onMounted(() => {
   loadPost();
@@ -130,7 +141,6 @@ function handleSearch() {
   };
 
   store.searchPost(request).then((res) => {
-    console.log(res);
     if (res.data.message === "success") {
       store.posts = res.data.data;
 
@@ -155,6 +165,8 @@ function loadPost() {
         const blob = new Blob([response.data], { type: "image/*" });
         item.imageSrc = URL.createObjectURL(blob);
       });
+
+      item.publish_date = moment(item.publish_date).format("DD/MM/YYYY");
     });
   });
 }
@@ -186,10 +198,9 @@ function openModal(mode, item) {
   if (modeForm.value === "Edit") {
     selectedData.value = item;
 
-    selectedData.value.publish_date = moment(
-      selectedData.value.publish_date,
-      "DD/MM/YYYY"
-    ).format("YYYY-MM-DD");
+    item.publish_date = moment(item.publish_date, "DD/MM/YYYY").format(
+      "YYYY-MM-DD"
+    );
   }
 }
 //Modal Form
@@ -264,28 +275,44 @@ function handleDate(modelValue) {
 }
 
 function handleSubmit() {
-  modeForm.value === "Add"
-    ? store
-        .savePost({
-          file: thumbnailPath.value,
-          thumbnail: thumbnail.value,
-          title: title.value,
-          content: content.value,
-          publishStatus: publishStatus.value,
-          publishDate: moment(publishDate.value, "YYYY-MM-DD").format(
-            "DD/MM/YYYY"
-          ),
-        })
-        .then((res) => {
-          console.log("response", res);
-          if (res.data.message === "success") {
-            closeModal();
-            loadPost();
-          }
-        })
-    : handleUpdate(selectedData.value);
+  modeForm.value === "Add" ? handleAdd() : handleUpdate(selectedData.value);
 }
 // Submit
+
+// Error
+const showSnackbar = ref(false);
+const snackbarColor = ref("");
+const snackbarMsg = ref("");
+// Error
+
+// Add
+function handleAdd() {
+  store
+    .savePost({
+      file: thumbnailPath.value,
+      thumbnail: thumbnail.value,
+      title: title.value,
+      content: content.value,
+      publishStatus: publishStatus.value,
+      publishDate: moment(publishDate.value).format("YYYY-MM-DD"),
+      publishBy: localStorage.user,
+    })
+    .then((res) => {
+      console.log("response", res);
+      if (res.data.message === "success") {
+        closeModal();
+        loadPost();
+      }
+    })
+    .catch((err) => {
+      console.log(err.response.data);
+      showSnackbar.value = true;
+      snackbarColor.value = "red";
+      snackbarMsg.value = err.response.data.message;
+    });
+  showSnackbar.value = false;
+}
+// Add
 
 //Update
 function handleUpdate(item) {
@@ -295,15 +322,25 @@ function handleUpdate(item) {
     title: item.title,
     content: item.content,
     publishStatus: item.publish_status,
-    publishDate: moment(item.publish_date, "YYYY-MM-DD").format("DD/MM/YYYY"),
+    publishDate: moment(item.publish_date).format("YYYY-MM-DD"),
+    rewriteBy: localStorage.user,
   };
 
-  store.updatePost(item.id, request).then((res) => {
-    if (res.data.message === "success") {
-      closeModal();
-      loadPost();
-    }
-  });
+  store
+    .updatePost(item.id, request)
+    .then((res) => {
+      if (res.data.message === "success") {
+        closeModal();
+        loadPost();
+      }
+    })
+    .catch((err) => {
+      console.log(err.response.data);
+      showSnackbar.value = true;
+      snackbarColor.value = "red";
+      snackbarMsg.value = err.response.data.message;
+    });
+  showSnackbar.value = false;
 }
 //Update
 

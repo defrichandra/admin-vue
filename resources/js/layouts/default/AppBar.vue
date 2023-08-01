@@ -17,13 +17,13 @@
           <v-list-item v-for="(item, i) in items" :key="i">
             <v-list-item-title>
               <v-btn
+                v-if="item.code === 'sign_out'"
                 variant="plain"
                 @click="handleLogOut"
-                v-if="item.code === 'sign_out'"
               >
                 {{ item.title }}
               </v-btn>
-              <v-btn variant="plain" @click="handleProfile" v-else>
+              <v-btn v-else variant="plain" @click="handleProfile">
                 {{ item.title }}
               </v-btn>
             </v-list-item-title>
@@ -49,6 +49,7 @@ function handleLogOut() {
       router.push({ name: "Login" });
       localStorage.setItem("isLoggedIn", false); // Persist the isLoggedIn state in browser storage
       localStorage.setItem("token", "");
+      localStorage.setItem("user", "");
     }
   });
 }
@@ -59,7 +60,8 @@ const items = ref([
 ]);
 
 function handleProfile() {
-  console.log("profile");
+  // console.log("profile");
+  router.push({ name: "Profile" });
 }
 </script>
 

@@ -17,6 +17,8 @@ class Posts extends Model implements JWTSubject
         'content',
         'publish_status',
         'publish_date',
+        'created_by',
+        'updated_by'
     ];
 
     // Implement the methods required by the JWTSubject interface

@@ -64,6 +64,15 @@ class PostsController extends Controller
     public function save_post(Request $request)
     {
         if ($request->hasHeader('Authorization')) {
+            $request->validate([
+                'thumbnail' => 'required|string|max:255',
+                'title' => 'required|string|max:255',
+                'content' => 'required|string|max:255',
+                'publishStatus' => 'required|string|max:255',
+                'publishDate' => 'required|string|max:255',
+                'publishBy' => 'required|string|max:255',
+            ]);
+
             $post = Posts::create([
                 'file' => $request->input(key: 'file'),
                 'thumbnail' => $request->input(key: 'thumbnail'),
@@ -71,7 +80,9 @@ class PostsController extends Controller
                 'content' => $request->input(key: 'content'),
                 'publish_status' => $request->input(key: 'publishStatus'),
                 'publish_date' => $request->input(key: 'publishDate'),
+                'created_by' => $request->input(key: 'publishBy'),
             ]);
+
             return response()->json([
                 'message' => 'success',
                 'data' => $post
@@ -99,7 +110,26 @@ class PostsController extends Controller
     {
         if ($request->hasHeader('Authorization')) {
             $posts = Posts::find($id);
-            $posts->update($request->all());
+
+            $request->validate([
+                'thumbnail' => 'required|string|max:255',
+                'title' => 'required|string|max:255',
+                'content' => 'required|string|max:255',
+                'publishStatus' => 'required|string|max:255',
+                'publishDate' => 'required|date',
+                'rewriteBy' => 'required|string|max:255',
+            ]);
+
+            $posts->update([
+                'file' => $request->input(key: 'file'),
+                'thumbnail' => $request->input(key: 'thumbnail'),
+                'title' => $request->input(key: 'title'),
+                'content' => $request->input(key: 'content'),
+                'publish_status' => $request->input(key: 'publishStatus'),
+                'publish_date' => $request->input(key: 'publishDate'),
+                'updated_by' => $request->input(key: 'rewriteBy'),
+            ]);
+
             return response()->json([
                 'message' => 'success',
                 'data' => $posts

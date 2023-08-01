@@ -9,7 +9,7 @@
         link
       ></side-bar>
       <default-view />
-    </div>  
+    </div>
   </v-app>
 </template>
 

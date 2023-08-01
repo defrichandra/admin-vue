@@ -113,13 +113,6 @@ defineEmits([
   "handleDate",
   "handleSubmit",
 ]);
-
-function triggerDateInput() {
-  const dateInput = document.getElementById("dateInput");
-  dateInput.style.display = "block";
-  dateInput.focus();
-  dateInput.click();
-}
 </script>
 
 <style src="./Post.scss" lang="scss" scoped />

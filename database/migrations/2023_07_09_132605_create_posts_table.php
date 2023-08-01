@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('title');
             $table->string('content');
             $table->string('publish_status');
-            $table->string('publish_date');
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
+            $table->date('publish_date');
             $table->timestamps();
         });
     }

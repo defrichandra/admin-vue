@@ -11,7 +11,7 @@ const router = createRouter({
 //apply route guard
 router.beforeEach((to, from, next) => {
     const isLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
-    console.log(isLoggedIn);
+    // console.log(isLoggedIn);
     if (to.meta.requiresAuth && !isLoggedIn) {
         next({ name: "Login" }); // Redirect to the login route
     } else if (to.name === "Login" && isLoggedIn) {

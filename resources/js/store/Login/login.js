@@ -14,8 +14,21 @@ export const useLoginStore = defineStore("app", {
             // Retrieve the isLoggedIn state from browser storage on store initialization
             const isLoggedIn = localStorage.getItem("isLoggedIn");
             const token = localStorage.getItem("token");
+            const user = localStorage.getItem("user");
 
-            return { isLoggedIn, token };
+            return { isLoggedIn, token, user };
+        },
+        async register(request) {
+            return await new Promise((resolve, reject) => {
+                axios
+                    .post(`${url}/api/auth/register`, request)
+                    .then((response) => {
+                        resolve(response);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
+            });
         },
         async login(request) {
             return await new Promise((resolve, reject) => {
@@ -26,7 +39,6 @@ export const useLoginStore = defineStore("app", {
                     })
                     .catch((error) => {
                         reject(error);
-                        return false; // Return false to indicate a failed login
                     });
             });
         },

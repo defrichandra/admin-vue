@@ -44,17 +44,17 @@
           />
         </div>
         <button class="btn" type="submit">Login</button>
-        <!-- <p class="signup-link">
+        <p class="signup-link">
           Don't have an account?
-          <a class="signup-link link" href=""> Sign up now</a>
-        </p> -->
+          <a class="signup-link link" @click="handleRegister"> Register </a>
+        </p>
       </form>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { useLoginStore } from "../../store/Login/login";
 import { useRouter } from "vue-router";
 
@@ -75,8 +75,13 @@ function handleLogin() {
         router.push({ name: "Posts" });
         localStorage.setItem("isLoggedIn", true); // Persist the isLoggedIn state in browser storage
         localStorage.setItem("token", res.data.tokenDetails.token);
+        localStorage.setItem("user", res.data.user.name);
       }
     });
+}
+
+function handleRegister() {
+  router.push({ name: "Register" });
 }
 </script>
 

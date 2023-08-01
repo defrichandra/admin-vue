@@ -6,17 +6,15 @@
     permanent
   >
     <v-list flat dense nav class="mt-2">
-      <v-list-group color="primary" mandatory>
-        <v-list-item
-          v-for="item in itemsSideBar"
-          :key="item.title"
-          :to="item.to"
-          :title="item.title"
-          :prepend-icon="item.icon"
-          dense
-        >
-        </v-list-item>
-      </v-list-group>
+      <v-list-item
+        v-for="item in itemsSideBar"
+        :key="item.title"
+        :to="item.to"
+        :title="item.title"
+        :prepend-icon="item.icon"
+        dense
+      >
+      </v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
